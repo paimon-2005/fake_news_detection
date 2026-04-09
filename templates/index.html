@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>Detect Truth in a World of <span style="color: var(--primary);">Misinformation</span></h1>
+        <p>Verify news articles using our advanced machine learning system with over 96% accuracy. Instant analysis, real-time statistics, and reliable results.</p>
+        <div class="hero-btns">
+            <a href="/predict" class="btn btn-primary">Start Analyzing <i class="fas fa-arrow-right"></i></a>
+            <a href="/about" class="btn" style="border: 1px solid var(--border); margin-left: 1rem;">Learn More</a>
+        </div>
+    </section>
+
+    <div class="features-grid">
+        <div class="glass-card feature-card">
+            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+            <h3>Fast Analysis</h3>
+            <p>Get results in under a second. Our optimized model processes long articles instantly.</p>
+        </div>
+        <div class="glass-card feature-card">
+            <div class="feature-icon"><i class="fas fa-brain"></i></div>
+            <h3>Advanced AI</h3>
+            <p>Powered by a Passive Aggressive Classifier specifically tuned for textual deception patterns.</p>
+        </div>
+        <div class="glass-card feature-card">
+            <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+            <h3>Live Stats</h3>
+            <p>Track global news trends and prediction accuracy through our dedicated dashboard.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

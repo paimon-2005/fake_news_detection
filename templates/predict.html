@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="hero" style="padding: 4rem 0 2rem;">
+        <h1 style="font-size: 2.5rem;">Article Analysis</h1>
+        <p>Paste the article details below to check its reliability.</p>
+    </div>
+
+    <div class="glass-card predict-form">
+        <div class="form-group">
+            <label>Article Title (Optional)</label>
+            <input type="text" id="title" class="form-control" placeholder="Enter headline...">
+        </div>
+        <div class="form-group">
+            <label>Author (Optional)</label>
+            <input type="text" id="author" class="form-control" placeholder="Source/Author name...">
+        </div>
+        <div class="form-group">
+            <label>Article Text</label>
+            <textarea id="text" class="form-control" placeholder="Paste the full article content here..."></textarea>
+        </div>
+        <button id="predict-btn" class="btn btn-primary" style="width: 100%; justify-content: center;">
+            <i class="fas fa-search"></i> Run Detection
+        </button>
+    </div>
+
+    <div id="loading" style="text-align: center; margin-top: 2rem; display: none;">
+        <i class="fas fa-circle-notch fa-spin fa-2x" style="color: var(--primary);"></i>
+        <p style="margin-top: 1rem;">Analyzing patterns...</p>
+    </div>
+
+    <div id="result-container">
+        <div class="glass-card result-card">
+            <div id="prediction-badge" class="prediction-badge">RELIABLE</div>
+            <h3 id="result-text">This article appears to be reliable.</h3>
+            
+            <div class="confidence-container" style="margin-top: 2rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>Confidence Score</span>
+                    <span id="confidence-value">85%</span>
+                </div>
+                <div class="confidence-bar">
+                    <div id="confidence-fill" class="confidence-fill" style="width: 85%;"></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: left; background: rgba(15, 23, 42, 0.5); padding: 1rem; border-radius: 12px; border: 1px solid var(--border);">
+                <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-muted);"><i class="fas fa-microscope" style="color: var(--primary);"></i> Linguistic Insights</h4>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Words that most heavily influenced this prediction:</p>
+                <div id="insights-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <!-- Insights will appear here -->
+                </div>
+            </div>
+
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 1.5rem;">
+                Prediction is based on linguistic markers and known misinformation patterns.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('predict-btn').addEventListener('click', async () => {
+    const title = document.getElementById('title').value;
+    const author = document.getElementById('author').value;
+    const text = document.getElementById('text').value;
+
+    if (!text) {
+        alert('Please paste some article text.');
+        return;
+    }
+
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('result-container').style.display = 'none';
+
+    const result = await apiCall('/v1/predict', 'POST', { title, author, text });
+
+    document.getElementById('loading').style.display = 'none';
+
+    if (result.error) {
+        alert('Error: ' + result.error);
+        return;
+    }
+
+    const badge = document.getElementById('prediction-badge');
+    const resultText = document.getElementById('result-text');
+    const confValue = document.getElementById('confidence-value');
+    const confFill = document.getElementById('confidence-fill');
+
+    badge.className = 'prediction-badge ' + (result.prediction === 'RELIABLE' ? 'reliable' : 'unreliable');
+    badge.textContent = result.prediction;
+    resultText.textContent = result.prediction === 'RELIABLE' 
+        ? 'This article appears to be reliable.' 
+        : 'Warning: This article shows signs of misinformation.';
+    
+    const confPercent = Math.round(result.confidence * 100);
+    confValue.textContent = confPercent + '%';
+    confFill.style.width = '0%';
+    
+    // Linguistic Insights
+    const insightsContainer = document.getElementById('insights-container');
+    if (result.insights && result.insights.length > 0) {
+        insightsContainer.innerHTML = result.insights.map(item => {
+            const importanceClass = item.weight > 0 ? (result.prediction === 'RELIABLE' ? 'reliable' : 'unreliable') : (result.prediction === 'RELIABLE' ? 'unreliable' : 'reliable');
+            return `<span style="background: rgba(255,255,255,0.05); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.1);">
+                <strong style="color: var(--${importanceClass});">${item.word}</strong>
+                <span style="opacity: 0.5; margin-left: 5px;">(${Math.abs(item.weight).toFixed(2)})</span>
+            </span>`;
+        }).join('');
+    } else {
+        insightsContainer.innerHTML = '<span style="font-size: 0.8rem; color: var(--text-muted);">No significant distinct linguistic markers found.</span>';
+    }
+    
+    document.getElementById('result-container').style.display = 'block';
+    
+    setTimeout(() => {
+        confFill.style.width = confPercent + '%';
+    }, 100);
+});
+</script>
+{% endblock %}

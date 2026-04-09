@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="hero" style="padding: 4rem 0 2rem;">
+        <h1 style="font-size: 2.5rem;">Prediction History</h1>
+        <p>Review previous analyses and trends.</p>
+    </div>
+
+    <div class="glass-card" style="padding: 0;">
+        <div class="history-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Article Details</th>
+                        <th>Prediction</th>
+                        <th>Confidence</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body">
+                    <!-- Loaded via JS -->
+                </tbody>
+            </table>
+        </div>
+        <div id="no-history" style="text-align: center; padding: 4rem; display: none;">
+            <i class="fas fa-history fa-3x" style="color: var(--border); margin-bottom: 1rem;"></i>
+            <p style="color: var(--text-muted);">No predictions found in history.</p>
+            <a href="/predict" class="btn btn-primary" style="margin-top: 1.5rem;">Analyze One Now</a>
+        </div>
+    </div>
+    
+    <div style="margin-top: 2rem; text-align: right;">
+        <button id="clear-history-btn" class="btn" style="color: var(--unreliable); border: 1px solid var(--unreliable); background: transparent;">
+            <i class="fas fa-trash"></i> Clear History
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadHistory() {
+    const data = await apiCall('/v1/history');
+    const body = document.getElementById('history-body');
+    const empty = document.getElementById('no-history');
+    
+    if (!data || data.length === 0) {
+        empty.style.display = 'block';
+        return;
+    }
+
+    body.innerHTML = data.map(item => `
+        <tr>
+            <td style="font-size: 0.85rem; color: var(--text-muted);">${item.timestamp}</td>
+            <td>
+                <div style="font-weight: 600;">${item.title || 'Untitled'}</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">by ${item.author || 'Unknown'}</div>
+            </td>
+            <td>
+                <span class="prediction-badge ${item.prediction.toLowerCase()}" style="font-size: 0.7rem; padding: 0.2rem 0.6rem;">
+                    ${item.prediction}
+                </span>
+            </td>
+            <td>${Math.round(item.confidence * 100)}%</td>
+        </tr>
+    `).join('');
+}
+
+document.getElementById('clear-history-btn').addEventListener('click', async () => {
+    if (confirm('Are you sure you want to clear all prediction history?')) {
+        await apiCall('/v1/clear-history', 'DELETE');
+        window.location.reload();
+    }
+});
+
+loadHistory();
+</script>
+{% endblock %}

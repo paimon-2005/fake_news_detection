@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruthSense | Fake News Detector</title>
+    <meta name="description" content="Advanced AI-powered fake news detection system. Verify articles with 96% accuracy.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-shield-halved"></i>
+                <span>TruthSense</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/" id="nav-home">Home</a></li>
+                <li><a href="/predict" id="nav-predict">Analyze</a></li>
+                <li><a href="/deepfake" id="nav-deepfake">Deepfake</a></li>
+                <li><a href="/history" id="nav-history">History</a></li>
+                <li><a href="/stats" id="nav-stats">Statistics</a></li>
+                <li><a href="/about" id="nav-about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

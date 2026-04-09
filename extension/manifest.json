@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "TruthSense - Fake News Detector",
+  "version": "1.0",
+  "description": "Highlight text on any website to analyze its reliability instantly using TruthSense AI.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:5000/*",
+    "http://localhost:5000/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Analyze with TruthSense"
+  }
+}

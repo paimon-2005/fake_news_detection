@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - SECRET_KEY=dev-key-very-secret
+      - DATABASE_URL=sqlite:///fake_news_detector.db
+    restart: always

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="hero" style="padding: 4rem 0 2rem;">
+        <h1 style="font-size: 2.5rem;">System Statistics</h1>
+        <p>Insights into our platform's performance and data distribution.</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="glass-card stat-card">
+            <div class="stat-value" id="total-predictions">0</div>
+            <div class="stat-label">Total Analyzed</div>
+        </div>
+        <div class="glass-card stat-card">
+            <div class="stat-value" id="reliable-count" style="color: var(--reliable);">0</div>
+            <div class="stat-label">Reliable Found</div>
+        </div>
+        <div class="glass-card stat-card">
+            <div class="stat-value" id="unreliable-count" style="color: var(--unreliable);">0</div>
+            <div class="stat-label">Unreliable Found</div>
+        </div>
+        <div class="glass-card stat-card">
+            <div class="stat-value" id="avg-confidence">0%</div>
+            <div class="stat-label">Avg. Confidence</div>
+        </div>
+    </div>
+
+    <div class="glass-card" style="text-align: center; margin-top: 2rem;">
+        <h3>Model Intelligence</h3>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Current model operational status and metadata.</p>
+        
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 2rem;">
+            <div class="model-info-bit">
+                <div style="font-weight: 700; color: var(--primary);">Passive Aggressive</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Classifier Type</div>
+            </div>
+            <div class="model-info-bit">
+                <div style="font-weight: 700; color: var(--primary);">TF-IDF</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Vectorization</div>
+            </div>
+            <div class="model-info-bit">
+                <div style="font-weight: 700; color: var(--primary);">96.2%</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Training Accuracy</div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 3rem;">
+            <button id="retrain-btn" class="btn" style="border: 1px solid var(--primary); color: var(--primary); background: transparent;">
+                <i class="fas fa-sync-alt"></i> Retrain Model
+            </button>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Requires train.csv in data/ folder</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadStats() {
+    const data = await apiCall('/v1/stats');
+    
+    document.getElementById('total-predictions').textContent = data.total;
+    document.getElementById('reliable-count').textContent = data.reliable;
+    document.getElementById('unreliable-count').textContent = data.unreliable;
+    document.getElementById('avg-confidence').textContent = Math.round(data.avg_confidence * 100) + '%';
+}
+
+document.getElementById('retrain-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('retrain-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Training...';
+    
+    const result = await apiCall('/v1/train', 'POST');
+    
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Retrain Model';
+    
+    if (result.status === 'success') {
+        alert(`Model trained successfully!\nAccuracy: ${result.accuracy}\nSamples: ${result.samples}`);
+    } else {
+        alert('Training failed: ' + (result.error || result.message));
+    }
+});
+
+loadStats();
+</script>
+{% endblock %}

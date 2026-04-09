@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <div class="hero" style="padding: 4rem 0 2rem;">
+        <h1 style="font-size: 2.5rem;">About TruthSense</h1>
+        <p>A mission to fight digital misinformation with transparency and technology.</p>
+    </div>
+
+    <div class="glass-card" style="margin-bottom: 3rem;">
+        <h2 style="margin-bottom: 1.5rem;">The Challenge</h2>
+        <p style="margin-bottom: 1rem;">In an era of rapid information sharing, the spread of "fake news" has become a significant societal challenge. Misinformation can influence elections, affect public health, and cause unnecessary panic.</p>
+        <p>TruthSense was built to provide a data-driven layer of verification for online content, helping users distinguish between genuine reporting and manipulated narratives.</p>
+    </div>
+
+    <div class="glass-card" style="margin-bottom: 3rem;">
+        <h2 style="margin-bottom: 1.5rem;">Our Technology</h2>
+        <p style="margin-bottom: 1rem;">The system utilizes a <strong>Passive Aggressive Classifier</strong>, a type of online learning algorithm. Unlike many classifiers, it remains passive when a prediction is correct and makes aggressive updates only when a mistake occurs, making it ideal for large-scale textual data.</p>
+        
+        <ul style="list-style: none; margin-top: 1.5rem;">
+            <li style="margin-bottom: 0.75rem;"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 0.5rem;"></i> <strong>Natural Language Processing:</strong> Article text is converted to numerical vectors using TF-IDF.</li>
+            <li style="margin-bottom: 0.75rem;"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 0.5rem;"></i> <strong>Dynamic Learning:</strong> The model can be retrained as new datasets become available.</li>
+            <li style="margin-bottom: 0.75rem;"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 0.5rem;"></i> <strong>Linguistic Markers:</strong> Analysis includes sentiment, vocabulary diversity, and structural patterns.</li>
+        </ul>
+    </div>
+
+    <div class="glass-card" style="text-align: center;">
+        <h2>Ready to verify?</h2>
+        <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Take TruthSense for a spin today.</p>
+        <a href="/predict" class="btn btn-primary">Try Article Analysis</a>
+    </div>
+</div>
+{% endblock %}

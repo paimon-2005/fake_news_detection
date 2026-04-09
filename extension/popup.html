@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TruthSense</title>
+    <style>
+        body {
+            width: 320px;
+            padding: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+        }
+        h2 {
+            margin-top: 0;
+            color: #6366f1;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        button:hover {
+            background-color: #4f46e5;
+        }
+        #result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        .reliable { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
+        .unreliable { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+        .confidence-txt { font-size: 0.85rem; color: #94a3b8; font-weight: normal; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h2>TruthSense Analyzer</h2>
+    <p style="font-size: 0.9rem; color: #cbd5e1;">Highlight text on the page and click underneath.</p>
+    
+    <button id="analyze-btn">Analyze Highlighted Text</button>
+    
+    <div id="loading" style="display: none; text-align: center; color: #6366f1; margin-top: 10px;">
+        Analyzing content...
+    </div>
+
+    <div id="result">
+        <div id="prediction"></div>
+        <div id="confidence" class="confidence-txt"></div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
